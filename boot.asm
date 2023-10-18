@@ -19,8 +19,22 @@ boot:
 	mov bx, newline
 	call print
 	
-halt:
-	jmp $
+disk_read:
+	mov ax, 0x1000
+	mov es, ax
+	mov bx, 0
+	
+	mov ah, 2
+	mov dl, 0
+	mov ch, 0
+	mov dh, 0
+	mov cl, 2
+	mov al, 1
+	
+	int 13h
+	
+	jc disk_read
+	jmp 0x1000:0
 
 print:
 	pusha
@@ -35,6 +49,9 @@ print:
 .finally:
 	popa
 	ret
+
+	
+
 
 ;Message
 greeting db 'Hello, World!', 0
